@@ -35,8 +35,24 @@ class Autonoleggio:
             Funzione che legge tutte le automobili nel database
             :return: una lista con tutte le automobili presenti oppure None
         """
+        cnx=get_connection()
+        results=[]
+        if cnx is not None:
+            cursor = cnx.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM automobile")
+            for row in cursor:
+                results.append(Automobile(row["codice"],row["marca"],row["modello"],row["anno"],row["posti"]))
 
-        # TODO
+            cursor.close()
+            cnx.close()
+            return results
+        else:
+            print("Connessione non trovata")
+            return None
+
+
+
+
 
     def cerca_automobili_per_modello(self, modello) -> list[Automobile] | None:
         """
@@ -44,4 +60,20 @@ class Autonoleggio:
             :param modello: il modello dell'automobile
             :return: una lista con tutte le automobili di marca e modello indicato oppure None
         """
-        # TODO
+        cnx=get_connection()
+        results=[]
+        query="SELECT * FROM automobile WHERE aumobile.modello=%s"
+        if cnx is not None:
+            cursor = cnx.cursor(dictionary=True)
+            cursor.execute(query, (modello,))
+            for row in cursor:
+                results.append(Automobile(row["codice"],row["marca"],row["modello"],row["anno"],row["posti"]))
+
+            cursor.close()
+            cnx.close()
+            return results
+        else:
+            print("Connessione non trovata")
+            return None
+
+
